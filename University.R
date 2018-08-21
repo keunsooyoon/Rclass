@@ -64,7 +64,7 @@ colnames(data) = c("uni", "X", "Y")
 library(ggplot2)
 library(ggmap)
 
-# map 변수에 서울 지도  넣기 , 줌은 11 , 타입은 watercolor
+# map 변수에 seoul 지도 넣기 , 줌은 11 , 타입은 watercolor
 
 
 
