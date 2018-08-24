@@ -238,20 +238,76 @@ head(movie_alltxt)
 # 분석
 #######################################################
 
-
+# 문제점 많음 
 # 자바 설치 jdk  7 
 #  http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html
 
 
 install.packages("rJava")
 install.packages("KoNLP")
+
+library(rJava)
 library(KoNLP)
+
 useSejongDic()
 
 
+# 수집한 텍스트 확인 
+
+head(movie_alltxt)
+
+
+# 문자열 전처리
+
+movie_alltxt = str_to_lower(alltxt)# 영문자 소문자로 변환
+movie_alltxt = gsub("관람객","",alltxt) # 관람객 단어 제거
+movie_alltxt = gsub("[ㄱ-ㅣ]","",alltxt) # ㅋㅋㅋ ,ㅜㅠ 등 제거
+movie_alltxt = gsub("[[:punct:]]","",alltxt) # 구두점 제거
+movie_alltxt = str_trim(alltxt,side="right") #공백 제거
 
 
 
+
+# 2글자 이상 단어만 추출 
+
+noun.list = sapply(movie_alltxt,USE.NAMES = F,FUN = extractNoun)
+noun.list = lapply(noun.list, function (x) return(x[str_length(x) >=2 ]))
+
+head(noun.list)
+
+
+
+
+
+# 워드 클라우드
+
+install.packages("wordcloud2")
+
+library(wordcloud2)
+
+
+
+
+allnoun = unlist(noun.list)
+head(allnoun,20)
+
+
+
+# 단어별 개수 정리
+
+allnoun.table = table(allnoun)
+allnoun.table = sort(allnoun.table,decreasing = T)
+head(allnoun.table,30)
+allnoun
+
+
+
+
+
+
+# 그림 그리기 
+
+wordcloud2(allnoun.table,minSize = 5)
 
 
 
