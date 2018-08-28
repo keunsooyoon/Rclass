@@ -145,68 +145,6 @@ tweets = table(tweets)
 
 
 
-###############################################################
-# R 연관성 분석
-###############################################################
-
-  #  Sys.setenv(JAVA_HOME="C:/Program Files/Java/jre1.8.0_111/") 
-
-install.packages("rJava")
-install.packages("KoNLP")
-install.packages("arules")
-install.packages("igraph")
-install.packages("combinat")
-
-
-library(rJava)
-library(KoNLP)
-library(arules)
-library(igraph)
-library(combinat)
-
-Sys.setenv(JAVA_HOME="C:/Program Files/Java/jre10.0.2/")
-
-
-
-
-
-string = enc2utf8("프로듀스+48")
-
-tweets = searchTwitter(string, n = 3000, lang="ko", retryOnRateLimit = 10000)
-
-
-
-p48 = Map(extractNoun, tweets)
-p48 = unique(p48)
-p48 = sapply(p48, unique)
-p48 = sapply(p48, function(x) {Filter(function(y) {nchar(y) <= 4 && nchar(y) > 1 && is.hangul(y)},x)} )
-p48 = Filter(function(x){length(x) >= 2}, p48)
-names(p48) <- paste("Tr", 1:length(p48), sep="")
-wordtran <- as(p48, "transactions")
-#co-occurance table 
-wordtab <- crossTable(wordtran)
-
-ares <- apriori(wordtran, parameter=list(supp=0.05, conf=0.05))
-
-rules <- labels(ares, ruleSep=" ")
-rules <- sapply(rules, strsplit, " ",  USE.NAMES=F)
-rulemat <- do.call("rbind", rules)
-
-rulemat2 <- rulemat[1:34,]
-
-inspect(ares)
-
-
-ruleg <- graph.edgelist(rulemat2[-c(1:16),],directed=F)
-plot.igraph(ruleg, vertex.label=V(ruleg)$name, vertex.label.cex=1, vertex.size=20, 
-            layout=layout.fruchterman.reingold,vertex.label.font=2,edge.color="black")
-
-
-
-
-
-
-
 
 
 
