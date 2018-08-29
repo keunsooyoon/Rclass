@@ -204,4 +204,99 @@ head(post,1)
 
 
 
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+#######################################################
+# 분석
+#######################################################
+
+# 문제점 많음 
+# 자바 설치 jdk  7 
+#  http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html
+
+                        
+# java 폴더 경로 설정 
+Sys.setenv(JAVA_HOME="C:/Program Files/Java/jre1.8.0_111/")
+                        
+                        
+
+install.packages("rJava")
+install.packages("KoNLP")
+install.packagesI("stringr")
+                        
+                        
+library(rJava)
+library(KoNLP)
+library(stringr)
+                        
+                        
+useSejongDic()
+
+
+# 수집한 텍스트 확인 
+
+head(text_extracted)
+
+
+# 문자열 전처리
+
+text_extracted = unique(text_extracted) # 중복 삭제
+text_extracted = gsub("관람객","",text_extracted) # 관람객 단어 제거
+text_extracted = gsub("[ㄱ-ㅣ]","",text_extracted) # ㅋㅋㅋ ,ㅜㅠ 등 제거
+text_extracted = gsub("[[:punct:]]","",text_extracted) # 구두점 제거
+
+
+
+
+
+# 2글자 이상 단어만 추출 
+
+noun.list = sapply(text_extracted,USE.NAMES = F,FUN = extractNoun)
+noun.list = lapply(noun.list, function (x) return(x[str_length(x) >=2 ]))
+
+head(noun.list)
+
+
+
+
+
+# 워드 클라우드
+
+install.packages("wordcloud2")
+
+library(wordcloud2)
+
+
+
+
+allnoun = unlist(noun.list)
+head(allnoun,20)
+
+
+
+# 단어별 개수 정리
+
+allnoun.table = table(allnoun)
+allnoun.table = sort(allnoun.table,decreasing = T)
+head(allnoun.table,30)
+allnoun
+
+
+
+
+
+
+# 그림 그리기 
+
+wordcloud2(allnoun.table,minSize = 5)
+
+
+
 
