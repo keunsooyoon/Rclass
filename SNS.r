@@ -286,7 +286,7 @@ head(allnoun,20)
 allnoun.table = table(allnoun)
 allnoun.table = sort(allnoun.table,decreasing = T)
 head(allnoun.table,30)
-allnoun
+
 
 
 
@@ -295,8 +295,7 @@ allnoun
 
 # 그림 그리기 
 
-wordcloud2(allnoun.table,minSize = 5)
-
+wordcloud2(allnoun.table, size = 2, minRotation = -pi/2, maxRotation = -pi/2)
 
 
 
